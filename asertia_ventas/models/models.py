@@ -117,9 +117,11 @@ class Invoice(models.Model):
                 items.append(new_item)
 
             data.update({"detalle" : items})
-            rec.json_erp = json.dumps(data)
 
-        _logger.info(data)
+            _logger.info(data)
+
+            rec.json_erp = json.dumps(data)
+        
         return True
 
 
