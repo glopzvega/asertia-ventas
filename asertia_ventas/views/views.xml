@@ -1,0 +1,62 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    
+    <record model="ir.ui.view" id="account_invoice_button_enviar_erp">
+      <field name="name">account.invoice.button.enviar.erp</field>
+      <field name="model">account.invoice</field>
+      <field name="inherit_id" ref="account.invoice_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//button[@name='action_invoice_sent']" position="before">
+          <button name="enviar_venta_erp" type="object" string="Enviar ERP" class="oe_higlight"/>
+        </xpath>
+        <xpath expr="//page[@name='other_info']/group/group/field[@name='origin']" position="after">
+          <field name="json_erp"/>
+        </xpath>
+      </field>
+    </record>
+    
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="asertia_ventas.action_window">
+      <field name="name">asertia_ventas window</field>
+      <field name="res_model">asertia_ventas.asertia_ventas</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="asertia_ventas.action_server">
+      <field name="name">asertia_ventas server</field>
+      <field name="model_id" ref="model_asertia_ventas_asertia_ventas"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="asertia_ventas" id="asertia_ventas.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="asertia_ventas.menu_1" parent="asertia_ventas.menu_root"/>
+    <menuitem name="Menu 2" id="asertia_ventas.menu_2" parent="asertia_ventas.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="asertia_ventas.menu_1_list" parent="asertia_ventas.menu_1"
+              action="asertia_ventas.action_window"/>
+    <menuitem name="Server to list" id="asertia_ventas" parent="asertia_ventas.menu_2"
+              action="asertia_ventas.action_server"/>
+    -->
+  </data>
+</odoo>

@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_asertia_ventas_asertia_ventas,asertia_ventas.asertia_ventas,model_asertia_ventas_asertia_ventas,,1,0,0,0
