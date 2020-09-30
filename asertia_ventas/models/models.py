@@ -25,8 +25,8 @@ class Invoice(models.Model):
                 "idBodega" : "",
                 "observacion" : "",
                 "usuarioFactura" : "",
-                "fechaFactura" : rec.date_invoice,
-                "fechaVencimiento" : rec.date_due,
+                "fechaFactura" : rec.date_invoice.strftime("%Y-%m-%d"),
+                "fechaVencimiento" : rec.date_invoice.strftime("%Y-%m-%d"),
                 "autorizacionSRI" : "",
                 "claveAccesoSRI" : "",
                 "totalSinImpuesto" : rec.amount_untaxed,
@@ -118,7 +118,7 @@ class Invoice(models.Model):
 
             data.update({"detalle" : items})
             rec.json_erp = json.dumps(data)
-            
+
         _logger.info(data)
         return True
 
