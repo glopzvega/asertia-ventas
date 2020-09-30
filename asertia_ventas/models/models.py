@@ -50,7 +50,7 @@ class Invoice(models.Model):
                     "direccion": rec.partner_id.street2,
                     "correoElectronico": rec.partner_id.email,
                     "idPais": rec.partner_id.country_id and rec.partner_id.country_id.code,
-                    "idProvincia": rec.partner_id.state_id and rec.partner_id.state_id.code,
+                    "idProvincia": rec.partner_id.state_id and rec.partner_id.state_id.code or "",
                     "idCiudad": rec.partner_id.city,
                     "sexo": rec.partner_id.sexo,
                     "cargo": "Test",
