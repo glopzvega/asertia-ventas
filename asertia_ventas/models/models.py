@@ -21,8 +21,8 @@ class Invoice(models.Model):
 				"secuencial" : fac_numbers[2],
 				"establecimiento" : fac_numbers[0],
 				"puntoEmision" : fac_numbers[1],
-				"idCliente" : "O" + rec.partner_id.id_ws or "",
-				"idSucursal" : "O" + rec.partner_id.id_ws or "",
+				"idCliente" : rec.partner_id.id_ws and "O" + rec.partner_id.id_ws or "",
+				"idSucursal" : rec.partner_id.id_ws and "O" + rec.partner_id.id_ws or "",
 				"idBodega" : "O400",
 				"observacion" : "",
 				"usuarioFactura" : rec.user_id.name,
@@ -38,7 +38,7 @@ class Invoice(models.Model):
 				"totalDescuentos" : "0.00",
 				"totalPagar" : "%.2f" % rec.amount_total,
 				"cliente": {
-					"idCliente": "O" + rec.partner_id.id_ws or "",
+					"idCliente": rec.partner_id.id_ws and "O" + rec.partner_id.id_ws or "",
 					"idClase": "61",
 					"nombreClase": "CONSUMIDOR FINAL",
 					"idTipo": "NM",
@@ -60,8 +60,8 @@ class Invoice(models.Model):
 					"estado": rec.partner_id.estado
 				},
 				"sucursal": {
-					"idSucursal": "O" + rec.partner_id.id_ws or "",
-					"idCliente": "O" + rec.partner_id.id_ws or "",
+					"idSucursal": rec.partner_id.id_ws and "O" + rec.partner_id.id_ws or "",
+					"idCliente": rec.partner_id.id_ws and "O" + rec.partner_id.id_ws or "",
 					"idClase": "61",
 					"nombreClase": "CONSUMIDOR FINAL",
 					"idTipo": "NM",
