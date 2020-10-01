@@ -14,109 +14,114 @@ class Invoice(models.Model):
     @api.multi
     def enviar_venta_erp(self):
         for rec in self:
+            fac_numbers = rec.number.split("-")
             data = {
-                "idFactura" : rec.number,
-                "numeroLineasDetalle" : len(rec.invoice_line_ids),
-                "secuencial" : rec.invoice_seq_number,
-                "establecimiento" : "",
-                "puntoEmision" : "",
-                "idCliente" : rec.partner_id.id_ws,
-                "idSucursal" : "",
-                "idBodega" : "",
+                "idFactura" : "O" + rec.number.replace("-", ""),
+                "numeroLineasDetalle" : str(len(rec.invoice_line_ids)),
+                "secuencial" : fac_numbers[2],
+                "establecimiento" : fac_numbers[0],
+                "puntoEmision" : fac_numbers[1],
+                "idCliente" : "O" + rec.partner_id.id_ws,
+                "idSucursal" : "O" + rec.partner_id.id_ws,
+                "idBodega" : "O400",
                 "observacion" : "",
-                "usuarioFactura" : "",
-                "fechaFactura" : rec.date_invoice.strftime("%Y-%m-%d"),
-                "fechaVencimiento" : rec.date_invoice.strftime("%Y-%m-%d"),
-                "autorizacionSRI" : "",
-                "claveAccesoSRI" : "",
-                "totalSinImpuesto" : rec.amount_untaxed,
-                "valorConIVA" : rec.amount_total,
-                "valorSinIVA" : rec.amount_untaxed,
+                "usuarioFactura" : rec.user_id.name,
+                "fechaFactura" : rec.date_invoice.strftime("%Y-%m-%d 00:00:00"),
+                "fechaVencimiento" : rec.date_invoice.strftime("%Y-%m-%d 00:00:00"),
+                "autorizacionSRI" : rec.access_code,
+                "claveAccesoSRI" : rec.access_code,
+                "totalSinImpuesto" : "%.2f" % rec.amount_untaxed,
+                "valorConIVA" : "%.2f" % rec.amount_total,
+                "valorSinIVA" : "%.2f" % rec.amount_untaxed,
                 "porcentajeIVA" : "12", #account_invoice_tax.tax_id.amount
-                "valorIVA" : rec.amount_tax, #account_invoice_tax.amount_total
-                "totalDescuentos" : "0",
-                "totalPagar" : rec.amount_total,
+                "valorIVA" : "%.2f" % rec.amount_tax, #account_invoice_tax.amount_total
+                "totalDescuentos" : "0.00",
+                "totalPagar" : "%.2f" % rec.amount_total,
                 "cliente": {
-                    "idCliente": rec.partner_id.id_ws,
-                    "idClase": "NA",
-                    "nombreClase": "NO ASIGNADO",
-                    "idTipo": "A2",
+                    "idCliente": "O" + rec.partner_id.id_ws,
+                    "idClase": "61",
+                    "nombreClase": "CONSUMIDOR FINAL",
+                    "idTipo": "NM",
                     "tipoPersona": rec.partner_id.tipo_persona,
                     "tipoIdentificacion": rec.partner_id.tipo_identificacion,
                     "numeroIdentificacion": rec.partner_id.vat,
                     "razonSocial": rec.partner_id.name,
-                    "telefono": rec.partner_id.phone,
-                    "telefonoCelular": rec.partner_id.mobile,
-                    "direccion": rec.partner_id.street2,
-                    "correoElectronico": rec.partner_id.email,
-                    "idPais": rec.partner_id.country_id and rec.partner_id.country_id.code,
-                    "idProvincia": rec.partner_id.state_id and rec.partner_id.state_id.code or "",
-                    "idCiudad": rec.partner_id.city,
+                    "telefono": rec.partner_id.phone or ".",
+                    "telefonoCelular": rec.partner_id.mobile or ".",
+                    "direccion": rec.partner_id.street2 or ".",
+                    "correoElectronico": rec.partner_id.email or ".",
+                    "idPais": "593",
+                    "idProvincia": "17",
+                    "idCiudad": "593178",
                     "sexo": rec.partner_id.sexo,
-                    "cargo": "Test",
-                    "identificacionRepresentanteLegal": "1720485174",
-                    "representanteLegal": "Mario Cadena",
+                    "cargo": "",
+                    "identificacionRepresentanteLegal": "",
+                    "representanteLegal": "",
                     "estado": rec.partner_id.estado
                 },
                 "sucursal": {
-                    "idSucursal": "I001",
-                    "idCliente": "I001",
-                    "idClase": "NA",
-                    "nombreClase": "NO ASIGNADO",
-                    "idTipo": "A2",
+                    "idSucursal": "O" + rec.partner_id.id_ws,
+                    "idCliente": "O" + rec.partner_id.id_ws,
+                    "idClase": "61",
+                    "nombreClase": "CONSUMIDOR FINAL",
+                    "idTipo": "NM",
                     "tipoIdentificacion": "C",
                     "numeroIdentificacion": "1720485174",
-                    "personaContacto": "Mario Cadena",
-                    "telefonoContacto": "0",
-                    "celularContacto": "0",
-                    "direccionesDeEntrega": "QUITO",
+                    "personaContacto": ".",
+                    "telefonoContacto": ".",
+                    "celularContacto": ".",
+                    "direccionesDeEntrega": ".",
                     "idPais": "593",
                     "idProvincia": "17",
-                    "idCiudad": "593171",
+                    "idCiudad": "593178",
                     "estado": "A"
                 },
                 "detalle" : [],
-                "pago" : [
-                    {
-                        "idLineaPago" : "",
-                        "codigoFormaPago" : "",
-                        "Valor" : "",
+                "pago" : []
+            }
+
+            pagos = []
+            if rec.pos_id:
+                for pago in rec.pos_id.statement_ids:
+                    new_pago = {
+                        "idLineaPago" : pago.id,
+                        "codigoFormaPago" : "0",
+                        "Valor" : "%.2f" % pago.amount,
                         "numeroDocumento" : "",
                         "numeroCuenta" : "",
                         "codigoInstitucionFinanciera" : "",
-                        "fechaTransaccion" : "",
-                        "fechaVencimiento" : "",
-                        "tipoEmision" : ""
-
+                        "fechaTransaccion" : data["fecha_factura"],
+                        "fechaVencimiento" : data["fecha_factura"],,
+                        "tipoEmision" : "E"
                     }
-                ]
-            }
+                    pagos.append(new_pago)
+            
 
             items = []
             for line in rec.invoice_line_ids:
                 new_item = {
-                    "idLineaDetalle" : line.id,
-                    "idBodega" : "",
+                    "idLineaDetalle" : str(line.id),
+                    "idBodega" : "O400",
                     "idProducto" : line.product_id.id_ws,
-                    "cantidad" : line.quantity,
-                    "precioUnitario" : line.price_unit,
-                    "costoUnitario" : line.product_id.standard_price,
-                    "porcentajeDescuento1" : "",
-                    "valorDescuento1" : "",
-                    "porcentajeDescuento2" : "",
-                    "valorDescuento2" : "",
-                    "porcentajeDescuento3" : "",
-                    "valorDescuento3" : "",
-                    "totalDescuentos" : line.discount,
-                    "subTotal" : line.price_subtotal,
-                    "porcentajeIVA" : line.tax_amount,
-                    "valorIVA" : line.price_tax, #price_tax
-                    "totalLinea" : line.price_total, #price_total
+                    "cantidad" : str(line.quantity),
+                    "precioUnitario" : str(line.price_unit),
+                    "costoUnitario" : str(line.product_id.standard_price),
+                    "porcentajeDescuento1" : "0.00",
+                    "valorDescuento1" : "0.00",
+                    "porcentajeDescuento2" : "0.00",
+                    "valorDescuento2" : "0.00",
+                    "porcentajeDescuento3" : "0.00",
+                    "valorDescuento3" : "0.00",
+                    "totalDescuentos" : "%.2f" % line.discount,
+                    "subTotal" : "%.2f" % line.price_subtotal,
+                    "porcentajeIVA" : "%.2f" % line.tax_amount,
+                    "valorIVA" : "%.2f" % line.price_tax, #price_tax
+                    "totalLinea" : "%.2f" % line.price_total, #price_total
                     "productoPromocional" : line.product_id.tipo_producto == 1 and "S" or "N"
                 }
                 items.append(new_item)
 
-            data.update({"detalle" : items})
+            data.update({"detalle" : items, "pago" : pagos})
 
             _logger.info(data)
 
