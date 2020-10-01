@@ -90,8 +90,8 @@ class Invoice(models.Model):
 						"numeroDocumento" : "",
 						"numeroCuenta" : "",
 						"codigoInstitucionFinanciera" : "",
-						"fechaTransaccion" : data["fecha_factura"],
-						"fechaVencimiento" : data["fecha_factura"],
+						"fechaTransaccion" : data["fechaFactura"],
+						"fechaVencimiento" : data["fechaFactura"],
 						"tipoEmision" : "E"
 					}
 					pagos.append(new_pago)
